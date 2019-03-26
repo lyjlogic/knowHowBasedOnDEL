@@ -1,0 +1,198 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{stmaryrd}
+\usepackage{color}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}{Claim}[theorem]
+\newtheorem{remark}[theorem]{Remark}
+
+
+%%%%commands
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}%颜色
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\noteYW}[1]{\textcolor{blue}{\sf YW: #1}}
+\newcommand{\noteLYJ}[1]{\textcolor{red}{\sf Li: #1}}
+\newcommand{\EL}{\textsf{EL}}
+\newcommand{\ELKh}{\textsf{ELKh}}
+\newcommand{\Act}{\ensuremath{\mathbf{A}}}
+\newcommand{\Ag}{\ensuremath{\mathbf{Ag}}}
+\newcommand{\BP}{\ensuremath{\mathbf{P}}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\rel}[1]{\xrightarrow{#1}}
+\newcommand{\lr}[1]{\langle #1 \rangle}
+\newcommand{\llrr}[1]{\llbracket #1 \rrbracket}
+
+\newcommand{\Kh}{\mathcal{K}h}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\pre}{\ensuremath{pre}}
+\newcommand{\post}{\ensuremath{post}}
+\newcommand{\LanEL}{\ensuremath{\mathcal{L}^\EL}}
+\newcommand{\LRA}{\Leftrightarrow}
+\renewcommand{\phi}{\varphi}
+\newcommand{\AxTrK}{\ensuremath{\mathtt{T}}}
+\newcommand{\AxTransK}{\ensuremath{\mathtt{4}}}
+\newcommand{\AxEucK}{\ensuremath{\mathtt{5}}}
+\newcommand{\EQREPKh}{\ensuremath{\mathtt{MONOKh}}}
+\newcommand{\TAUT}{\ensuremath{\mathtt{TAUT}}}
+\newcommand{\AxKtoKh}{\ensuremath{\mathtt{AxKtoKh}}}
+\newcommand{\AxKhtoKhK}{\ensuremath{\mathtt{AxKhtoKhK}}}
+\newcommand{\AxKhtoKKh}{\ensuremath{\mathtt{AxKhtoKKh}}}
+\newcommand{\DISTK}{\ensuremath{\mathtt{DISTK}}}
+\newcommand{\SLKh}{\mathbb{SLKH}}
+\newcommand{\MP}{\ensuremath{\mathtt{MP}}}
+\newcommand{\AxKhbot} {\ensuremath{\mathtt{AxKhbot}}}
+\newcommand{\NECK}{\ensuremath{\mathtt{NECK}}}
+\newcommand{\SUB}{\ensuremath{\mathtt{SUB}}}
+
+\newcommand{\fM}{\mathfrak{M}}
+\newcommand{\C}{\mathfrak{C}}
+
+\title{Logic of multi-agent knowing how: a DEL approach}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Preliminaries}
+\begin{definition}[Epistemic model]
+	An Epistemic model $\M$ is a tuple $$\lr{W^\M,\{\sim_i\mid i\in \Ag \},V^\M}$$ where:
+	\begin{itemize}
+		\item $W^\M$ is a non-empty set;
+		\item $\sim_i\ \subseteq {W\times W}$ is an equivalence relation over $W$ for each $i\in \Ag$;
+		\item $V^\M:\BP\to 2^W$ is a valuation.
+	\end{itemize}
+\end{definition}
+When the model $\M$ is obvious from the context, we also write $W^\M$ as $W$, and $V^\M$ as $V$.
+\begin{definition}[\EL\ language]
+	Given a set \BP\ of proposition letters and a set $\Ag$ of agents, the language of \EL\ is 
+	$$\begin{array}{r@{\quad::= \quad}l}
+	\varphi  &
+	\top\mid p
+	\mid \neg \varphi
+	\mid (\varphi \land \varphi)
+	\mid \K_i\phi \\
+	\end{array}$$
+	where $p\in\BP$ %$q\in \BO$, $r\in\BP\cup\BO$, 
+	and $i\in\Ag$. 
+\end{definition}
+
+\begin{definition}[\EL\ semantics]
+	Given a formula $\phi\in\LanEL$ and a pointed epistemic model $(\M,s)$, % where $\M=\lr{W,\Act,\sim,\{Q{(a)}\mid a\in \Act \},V}$, 
+	the satisfaction relation on $\phi$ and pointed model $(\M,s)$ is defined as follows:
+	$$\begin{array}{|rll|}
+	\hline
+	\M,s\vDash \top &  & always\\
+	\M,s\vDash p & \Leftrightarrow & s\in V(p)\\
+	\M,s\vDash \neg\phi & \Leftrightarrow & \M,s\nvDash \phi\\
+	\M,s\vDash (\phi\wedge\psi) &\LRA & \M,s\vDash\phi \text{ and } \M,s\vDash \psi\\
+	\M,s\vDash \K_i\phi&\Leftrightarrow&s\sim_i t \text{ implies } \M,t\vDash\phi\\
+	%\M,s\vDash [a]\phi&\Leftrightarrow&(s,t)\in Q(a) \text{ implies } \M,t\vDash\phi\\
+	\hline 
+	\end{array}$$
+\end{definition}
+
+\begin{definition}[Action model]
+	An action model is $$\E=\lr{E,\{\sim_i\mid i\in\Ag\},\pre,\post}$$ where 
+	\begin{itemize}
+		\item $E$ is a non-empty set of actions;
+		\item $\sim_i\ \subseteq {E\times E}$ is an equivalence relation over $E$ for each $i\in \Ag$;
+		\item $\pre:E\to \LanEL$ assigns a precondition to each event;
+		\item $\post:E\to \LanEL$ assigns a postcondition to each event. For each $e\in E$, $\post(e)$ is a conjunction of literals over \BP\ (including $\top$).
+	\end{itemize}
+We use $\post^+(e)$ to denote the set of proposition letters that are positive literals of $\post(e)$, and $\post^-(e)$ negatives. For each $e\in E$, we require that $\post^+(e)\cap\post^-(e)=\emptyset$.
+
+For each $D\subseteq E$, the pair $(\E,D)$ is called an epistemic action (or simply an action), and the events in $D$ are called the designated events.
+Given an action $a=(\E,D)$, the associated local action of agent $i\in\Ag$, denoted $a^i$, is $(\E,D^i)$ where $D^i=\{e\in E\mid e\sim_i e'$ for some $e'\in D  \}$.
+\end{definition}
+
+\begin{definition}[Product update]
+Given an epistemic model $\M=\lr{W^\M, \{\sim_i\mid i\in\Ag\}, V^\M}$ and an action model $\E=\lr{E,\{\sim_i\mid i\in\Ag\},\pre,\post}$, the product update is $$\M\otimes\E=\lr{W^{\M\otimes\E},\{\sim_i'\mid i\in\Ag \},V^{\M\otimes\E}}$$ where 
+\begin{itemize}
+	\item $W^{\M\otimes\E}=\{(w,e)\in W^\M\times E\mid (\M,w)\vDash \pre(e) \}$
+	\item $\sim_i'=\{(w,e),(w',e')\mid w\sim_i w',e\sim_i e' \}$
+	\item $(w,e)\in V^{\M\otimes\E}(p)\LRA p\in\post^+(e)$, or $p\not\in\post^-(e)$ and $w\in V^\M(p)$.
+\end{itemize} 
+\end{definition}
+
+\begin{definition}[Applicability]
+	Given an action $a=(\E,D)$ and an epistemic model $\M$, we say that $a$ is applicable in $X\subseteq W$ if for each $w\in X$, there is an event $e\in D$ such that $\M,w\vDash \pre(e)$. An action sequence $(\E_1,D_1)\cdots (\E_{n+1},D_{n+1})$ is applicable on $X$ if $(\E_1,D_1)\cdots (\E_{n},D_{n})$ is applicable on $X$ and $(\E_{n+1},D_{n+1})$ is applicable on each state in $(X\times D_1\cdots \times D_n)|_{W^{\M\otimes\E_1\cdots \otimes \E_n}}$.
+\end{definition}
+
+\section{Logic of Know how}
+\begin{definition}[\ELKh\ language]
+	Given a set \BP\ of proposition letters and a set $\Ag$ of agents, the language of \EL\ is 
+	$$\begin{array}{r@{\quad::= \quad}l}
+	\varphi  &
+	\top\mid p
+	\mid \neg \varphi
+	\mid (\varphi \land \varphi)
+	\mid \K_i\phi 
+	\mid \Kh_i \phi \\
+	\end{array}$$
+	where $p\in\BP$ %$q\in \BO$, $r\in\BP\cup\BO$, 
+	and $i\in\Ag$. 
+\end{definition}
+
+\begin{definition}
+    A model is a pair $\lr{\M,\E}$ consisting of an epistemic model and an action model. For each $w\in W^\M$, $(\lr{\M,\E},w)$ is a pointed model.
+\end{definition}
+
+Given an epistemic model $\M$ and $X\subseteq W^\M$, we use $[X]^i$ to denote the set $\{s\in W^\M\mid s\sim s'$ for some $s'\in X \}$. When $X$ is a singleton $\{s\}$, we write it as $[s]^i$. Similarly, we use the notation $[Y]^i$ where $Y$ is a subset of the domain of an action model $\E$.
+\begin{definition}[\ELKh\ semantics]
+$$\begin{array}{lll}
+\lr{\M,\E},s\vDash\Kh_i\phi &\iff& \text{there is an action sequence $(\E,D_1)\cdots (\E,D_{n})$:}\\
+&&(1.)\ (\E,D_1)\cdots (\E,D_{n}) \text{ is applicable on }[s]^i\\
+&&(2.)\ \lr{\M\otimes\E^n,\E}, w\vDash\phi \text{ for each }\\
+&&w\in ([s]^i\times[ D_1]^i\cdots \times [D_n]^i)|_{W^{\M\otimes\E^n}}.
+\end{array}$$
+%$\M,s\vDash\Kh_i\phi\iff$ there is an action sequence $(\E_1,D_1)\cdots (\E_{n},D_{n})$ such that 
+\end{definition}
+
+
+\begin{definition}
+	Proof system $\SLKh$
+	
+	\begin{center}
+		\begin{tabular*}{0.6\textwidth}{lc}
+			%		\multicolumn{2}{c}{System $\SKh$}\\
+			% \lcline{1-2}\rcline{3-4}
+			{\textbf{Axioms}}&\\
+			%\lcline{1-2}\rcline{3-4}
+			\TAUT & \text{all axioms of propositional logic}\\
+			\DISTK & $\K p\land\K (p\to q)\to \K q$\\
+			\AxTrK& $\K p\to p $ \\
+			\AxTransK& $\K p\to\K\K p$\\
+			\AxEucK& $\neg \K p\to\K\neg\K p$\\
+			\AxKtoKh &$\K p \to \Kh p$ \\	
+			\AxKhtoKKh&$\Kh p \to \K\Kh p$  \\	
+			%\AxKhEucK&$\neg\Khx p \to \K\neg\Khx p$ && \phantom{$\dfrac{\phi}{\Box\phi}$} \\
+			%\AxKhKh&$\Khx \Khx p \to \Khx p$  \\
+			\AxKhbot&$\neg \Kh \bot$  \\
+			\AxKhtoKhK&$\Kh p \to \Kh\K p$  \\
+		\end{tabular*}
+		\begin{tabular*}{0.6\textwidth}{lclc}
+			\textbf{Rules}\\
+			\MP & $\dfrac{\varphi,\varphi\to\psi}{\psi}$&\NECK &$\dfrac{\varphi}{\K\varphi}$\\
+			\EQREPKh& $\dfrac{\varphi\to\psi}{\Kh\varphi\to\Kh\psi}$ & \SUB & $\dfrac{\varphi(p)}{\varphi[\psi\slash p]}$
+		\end{tabular*}
+	\end{center}
+\end{definition}
+	
+	\begin{theorem}
+		$\SLKh$ is sound.
+	\end{theorem}
+\section{Completeness}
+
+\end{document}
